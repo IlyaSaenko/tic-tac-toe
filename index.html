@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Крестики-нолики</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div id="app">
+    <div class="screen" id="initial-screen">
+      <label for="player-name">Введите имя: </label>
+      <input id="player-name" type="text">
+
+      <fieldset>
+        <div>
+          <input id="mark-x" type="radio" value="X" name="marker">
+          <label for="mark-x">X</label>
+        </div>
+        <div>
+          <input id="mark-o" type="radio" value="O" name="marker">
+          <label for="mark-o">O</label>
+        </div>
+      </fieldset>
+
+      <button id="start-btn">Начать игру</button>
+    </div>
+
+    <div class="screen hidden" id="game-screen">
+      <h2 id="current-turn"></h2>
+      <div class="board" id="board"></div>
+
+      <button id="restart-btn">Начать заново</button>
+    </div>
+  </div>
+  <script src="./app.js" type="module"></script>
+</body>
+</html>

@@ -1,0 +1,158 @@
+@keyframes fadeInBoard {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes clickDown {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(0.85);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #f7f7f7, #e0e7ff);
+  margin: 0;
+}
+
+.screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  min-width: 280px;
+}
+
+.hidden {
+  display: none;
+}
+
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, 80px);
+  grid-template-rows: repeat(3, 80px);
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.cell {
+  background: #fff;
+  border: 2px solid #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 36px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.3s;
+}
+
+.cell:hover {
+  transform: scale(1.05);
+  background: #f0f0f0;
+}
+
+.cell.x {
+  color: #ff3e3e;
+  transform: rotate(-5deg);
+  animation: pop 0.25s ease forwards;
+}
+
+.cell.o {
+  color: #3e83ff;
+  transform: rotate(5deg);
+  animation: pop 0.25s ease forwards;
+}
+
+@keyframes pop {
+  0% { transform: scale(0); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.cell.winner {
+  background: linear-gradient(45deg, #a3f7b5, #6de68a);
+  animation: pulse 0.6s ease-in-out infinite alternate;
+}
+
+@keyframes pulse {
+  from { background-color: #a3f7b5; }
+  to { background-color: #6de68a; }
+}
+
+button {
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  background: #3e83ff;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.3s;
+}
+
+button:hover {
+  background: #3061c3;
+  transform: scale(1.05);
+}
+
+#initial-screen input[type="text"] {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  width: 180px;
+  text-align: center;
+}
+
+#current-turn {
+  font-size: 18px;
+  font-weight: 600;
+  margin-top: 10px;
+  color: #333;
+  transition: opacity 0.3s ease;
+}
+
+.cell.win {
+  background-color: #b9ffb1;
+  transition: background-color 0.4s ease, transform 0.3s ease;
+  animation: pulse 0.6s ease-in-out 2;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
