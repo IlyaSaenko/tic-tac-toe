@@ -17,7 +17,7 @@ let cells = [];
 let isPlayerTurn = true;
 
 const startGame = () => {
-  playerName = playerNameInput.value || 'Игрок';
+  playerName = playerNameInput.value.trim() || 'Игрок';
 
   const selectedRadio = Array.from(markerRadios).find(radio => radio.checked);
   playerMarker = selectedRadio ? selectedRadio.value : 'X';
@@ -30,7 +30,7 @@ const startGame = () => {
 
   isPlayerTurn = true;
   currentTurn.textContent = `Ходит: ${playerName} (${playerMarker})`;
-};
+}
 
 const createBoard = () => {
   board.innerHTML = '';
@@ -44,7 +44,7 @@ const createBoard = () => {
     cell.addEventListener('click', () => handleCellClick(i), { once: true });
     board.appendChild(cell);
     cells.push(cell);
-  }
+  };
 };
 
 const handleCellClick = (index) => {
@@ -63,22 +63,23 @@ const handleCellClick = (index) => {
 
   if (isBoardFull()) {
     currentTurn.textContent = 'Ничья 🤝';
+    disableBoard();
     return;
   }
 
   isPlayerTurn = false;
   currentTurn.textContent = 'Ход компьютера...';
   setTimeout(computerMove, 500);
-};
+}
 
 const computerMove = () => {
   const emptyIndices = boardState
-    .map((v, i) => (v === '' ? i : null))
-    .filter(i => i !== null);
-
+    .map((v, i) => v === '' ? i : null)
+    .filter(i => i !== null)
   if (emptyIndices.length === 0) return;
 
   const randomIndex = emptyIndices[Math.floor(Math.random() * emptyIndices.length)];
+
   boardState[randomIndex] = computerMarker;
   cells[randomIndex].textContent = computerMarker;
 
@@ -92,6 +93,7 @@ const computerMove = () => {
 
   if (isBoardFull()) {
     currentTurn.textContent = 'Ничья 🤝';
+    disableBoard();
     return;
   }
 
@@ -101,17 +103,21 @@ const computerMove = () => {
 
 const checkWin = (marker) => {
   const winPatterns = [
-    [0,1,2],[3,4,5],[6,7,8],
-    [0,3,6],[1,4,7],[2,5,8],
-    [0,4,8],[2,4,6]
+    [0, 1, 2], [3, 4, 5], [6, 7, 8],
+    [0, 3, 6], [1, 4, 7], [2, 5, 8],
+    [0, 4, 8], [2, 4, 6]
   ];
 
-  return winPatterns.find(pattern =>
-    pattern.every(index => boardState[index] === marker)
-  ) || null;
+  const findWinningPattern = () => {
+    const foundPattern = winPatterns
+      .find(pattern => pattern.every(index => boardState[index] === marker));
+    return foundPattern || null;
+  }
+
+  return findWinningPattern();
 };
 
-const highlightWinningCells = (combo) => { 
+const highlightWinningCells = (combo) => {
   if (!combo) return;
   combo.forEach(i => cells[i].classList.add('win'));
 };
@@ -122,17 +128,20 @@ const disableBoard = () => {
   cells.forEach(cell => {
     const newCell = cell.cloneNode(true);
     cell.replaceWith(newCell);
-  });
-};
+  })
+}
 
 const restartGame = () => {
   gameScreen.classList.add('hidden');
   initialScreen.classList.remove('hidden');
   playerNameInput.value = '';
   currentTurn.textContent = '';
+  markerRadios.forEach((r, i) => {
+    r.checked = i === false;
+  })
   board.innerHTML = '';
   boardState = Array(9).fill('');
-};
+}
 
 startBtn.addEventListener('click', startGame);
 restartBtn.addEventListener('click', restartGame);
