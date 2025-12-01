@@ -16,6 +16,7 @@ let boardState = Array(9).fill('');
 let cells = [];
 let isPlayerTurn = true;
 
+//startGame
 const startGame = () => {
   playerName = playerNameInput.value.trim() || 'Игрок';
 
@@ -32,6 +33,7 @@ const startGame = () => {
   currentTurn.textContent = `Ходит: ${playerName} (${playerMarker})`;
 }
 
+//createBoard
 const createBoard = () => {
   board.innerHTML = '';
   boardState = Array(9).fill('');
@@ -47,6 +49,7 @@ const createBoard = () => {
   };
 };
 
+//handleCellClick
 const handleCellClick = (index) => {
   if (!isPlayerTurn || boardState[index] !== '') return;
 
@@ -72,16 +75,43 @@ const handleCellClick = (index) => {
   setTimeout(computerMove, 500);
 }
 
+//computerMove
 const computerMove = () => {
   const emptyIndices = boardState
     .map((v, i) => v === '' ? i : null)
-    .filter(i => i !== null)
+    .filter(i => i !== null);
   if (emptyIndices.length === 0) return;
 
-  const randomIndex = emptyIndices[Math.floor(Math.random() * emptyIndices.length)];
+  let moveIndex = null;
 
-  boardState[randomIndex] = computerMarker;
-  cells[randomIndex].textContent = computerMarker;
+  for (let i of emptyIndices) {
+    boardState[i] = computerMarker;
+    if (checkWin(computerMarker)) {
+      moveIndex = i;
+      boardState[i] = '';
+      break;
+    }
+    boardState[i] = '';
+  }
+
+  if (moveIndex === null) {
+    for (let i of emptyIndices) {
+      boardState[i] = playerMarker;
+      if (checkWin(playerMarker)) {
+        moveIndex = i;
+        boardState[i] = '';
+        break;
+      }
+      boardState[i] = '';
+    }
+  }
+
+  if (moveIndex === null) {
+    moveIndex = emptyIndices[Math.floor(Math.random() * emptyIndices.length)];
+  }
+
+  boardState[moveIndex] = computerMarker;
+  cells[moveIndex].textContent = computerMarker;
 
   const winCombo = checkWin(computerMarker);
   if (winCombo) {
@@ -101,6 +131,7 @@ const computerMove = () => {
   currentTurn.textContent = `Ходит: ${playerName} (${playerMarker})`;
 };
 
+//checkWin
 const checkWin = (marker) => {
   const winPatterns = [
     [0, 1, 2], [3, 4, 5], [6, 7, 8],
@@ -117,13 +148,16 @@ const checkWin = (marker) => {
   return findWinningPattern();
 };
 
+//highlightWinningCells
 const highlightWinningCells = (combo) => {
   if (!combo) return;
   combo.forEach(i => cells[i].classList.add('win'));
 };
 
+//isBoardFull
 const isBoardFull = () => boardState.every(cell => cell !== '');
 
+//disableBoard
 const disableBoard = () => {
   cells.forEach(cell => {
     const newCell = cell.cloneNode(true);
@@ -131,6 +165,7 @@ const disableBoard = () => {
   })
 }
 
+//restartGame
 const restartGame = () => {
   gameScreen.classList.add('hidden');
   initialScreen.classList.remove('hidden');
