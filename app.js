@@ -172,7 +172,7 @@ const restartGame = () => {
   playerNameInput.value = '';
   currentTurn.textContent = '';
   markerRadios.forEach((r, i) => {
-    r.checked = i === false;
+    r.checked = i === 0;
   })
   board.innerHTML = '';
   boardState = Array(9).fill('');

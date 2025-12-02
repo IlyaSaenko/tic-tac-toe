@@ -28,9 +28,9 @@ let isPlayerTurn = true;
 // 9) Обновляем текст-индикатор текущего хода, показываем имя игрока и его маркер
 
 const startGame = () => {
-  playerName = playerNameInput.value.trim() || 'Игрок';
-
+  playerName = playerNameInput.value.trim() || 'Igrok';
   const selectedRadio = Array.from(markerRadios).find(radio => radio.checked);
+
   playerMarker = selectedRadio ? selectedRadio.value : 'X';
   computerMarker = playerMarker === 'X' ? 'O' : 'X';
 
@@ -38,9 +38,8 @@ const startGame = () => {
   gameScreen.classList.remove('hidden');
 
   createBoard();
-
   isPlayerTurn = true;
-  currentTurn.textContent = `Ходит: ${playerName} (${playerMarker})`;
+  currentTurn.textContent = 'Igrok steps';
 }
 
 //createBoard()
@@ -67,8 +66,8 @@ const createBoard = () => {
     cell.addEventListener('click', () => handleCellClick(i), { once: true });
     board.appendChild(cell);
     cells.push(cell);
-  };
-};
+  }
+}
 
 //handleCellClick = (index) =>
 // 1️⃣ Проверяем, можно ли кликать
@@ -91,27 +90,26 @@ const createBoard = () => {
 // ждём 0.5 секунды — для реалистичности — и вызываем ход ИИ
 
 const handleCellClick = (index) => {
-  if (!isPlayerTurn || boardState[index] !== '');
-
+  if (!isPlayerTurn || boardState[index] !== '') return;
   boardState[index] = playerMarker;
   cells[index].textContent = playerMarker;
 
   const winCombo = checkWin(playerMarker);
   if (winCombo) {
     highlightWinningCells(winCombo);
-    currentTurn.textContent = `${playerName} победил! 🎉`;
+    currentTurn.textContent = 'igrok win'
     disableBoard();
     return;
   }
 
   if (isBoardFull()) {
-    currentTurn.textContent = 'Ничья 🤝';
+    currentTurn.textContent = 'draw';
     disableBoard();
     return;
   }
 
   isPlayerTurn = false;
-  currentTurn.textContent = 'Ход компьютера...';
+  currentTurn.textContent = 'comp next';
   setTimeout(computerMove, 500);
 }
 
@@ -124,7 +122,7 @@ const handleCellClick = (index) => {
 const computerMove = () => {
   const emptyIndices = boardState
   .map((v, i) => v === '' ? i : null)
-  .filter(i => i !== null)
+  .filter(i => i !== null);
   if (emptyIndices.length === 0) return;
 }
 // 🔹 создаём переменную, куда запишем выбранный ход
@@ -174,8 +172,8 @@ if (moveIndex === null) {
 // 🔹 4️⃣ Если ни выигрышной, ни угрожающей клетки нет — случайный ход
 // (19) Если всё ещё нет хода — случайный выбор
 // (20) Случайный выбор из оставшихся пустых клеток
-if (moveIndex = null) {
-  moveIndex = emptyIndices[Math.floor(Math.random * emptyIndices.length)];
+if (moveIndex === null) {
+  moveIndex = emptyIndices[Math.floor(Math.random() * emptyIndices.length)];
 }
 
 // 🔹 5️⃣ Совершение хода компьютера
@@ -195,8 +193,8 @@ cells[moveIndex].textContent = computerMarker;
 const winCombo = checkWin(computerMarker);
 if (winCombo) {
   highlightWinningCells(winCombo);
-  currentTurn.textContent = ';;;'
-  disableBoard()
+  currentTurn.textContent = 'comp win';
+  disableBoard();
   return;
 }
 
@@ -207,16 +205,16 @@ if (winCombo) {
 // (32) Выходим из функции
 
 if (isBoardFull()) {
-  currentTurn.textContent = 'ddd';
-  disableBoard()
+  currentTurn.textContent = 'draw';
+  disableBoard();
   return;
 }
 
 // 🔹 8️⃣ Передаем ход игроку
 // (33) Разрешаем ход игроку
 // (34) Выводим сообщение о ходе игрока
-isPlayerTurn = playerMarker;
-currentTurn.textContent = 'igrok steps';
+isPlayerTurn = true;
+currentTurn.textContent = 'player next';
 
 
 //checkWin()
@@ -238,24 +236,23 @@ const checkWin = (marker) => {
 
   const findWinningPattern = () => {
     const foundPattern = winPatterns
-      .find(pattern => pattern.every(index => boardState[index] === marker));
-
+    .find(pattern => pattern.every(index => boardState[index] === marker));
     return foundPattern || null;
   }
 
-  return findWinningPattern();
-};
+  return findWinningPattern;
+}
 
 //highlightWinningCells(combo)
 // 🔹 Подсветка клеток, которые составляют выигрышную комбинацию
 // Пишем функцию, которая будет подсвечивать выигрышные клетки
 // если комбинации нет, ничего не делаем
-// добавляем CSS-класс "win"
+// если есть, добавляем CSS-класс "win"
 
 const highlightWinningCells = (combo) => {
   if (!combo) return;
   combo.forEach(i => cells[i].classList.add('win'));
-};
+}
 
 //isBoardFull()
 // 🔹 Проверка на ничью
@@ -285,6 +282,7 @@ const disableBoard = () => {
 // Показываем начальный экран
 // Очищаем поле ввода имени
 // Очищаем текст текущего хода
+// Убираем маркер
 // Очищаем DOM игрового поля
 // Полностью сбрасываем логику игры
 
@@ -294,11 +292,15 @@ const restartGame = () => {
   playerNameInput.value = '';
   currentTurn.textContent = '';
   markerRadios.forEach((r, i) => {
-    r.checked = i === false;
-  })
+    r.checked = i === 0;
+  });
   board.innerHTML = '';
   boardState = Array(9).fill('');
 }
+
+// 🔹 Вешаем слушатели на кнопки
+// Старт
+// Рестарт
 
 startBtn.addEventListener('click', startGame);
 restartBtn.addEventListener('click', restartGame);
